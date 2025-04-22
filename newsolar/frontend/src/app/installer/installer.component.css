@@ -1,0 +1,406 @@
+.installer-container {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header Stili */
+.installer-header {
+  background: linear-gradient(135deg, #1e88e5 0%, #1976d2 100%);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-left i {
+  font-size: 2.2rem;
+}
+
+.header-left h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.installer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.3rem;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  background: transparent;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Ana İçerik */
+.installer-content {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  height: calc(100vh - 4rem);
+}
+
+/* Sağ İçerik */
+.installer-main {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  overflow-y: auto;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+/* Kullanıcı Tablosu */
+.users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.users-header h2 {
+  color: #1a237e;
+  font-weight: 600;
+  font-size: 1.7rem;
+  letter-spacing: 0.5px;
+}
+
+.add-user-button {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.9rem 1.8rem;
+  background: linear-gradient(135deg, #1e88e5 0%, #1976d2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+.add-user-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(25, 118, 210, 0.4);
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.08);
+  table-layout: fixed;
+}
+
+.users-table th,
+.users-table td {
+  padding: 1.3rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Sütun genişliklerini ayarla */
+.username-col {
+  width: 40%;
+}
+
+.date-col {
+  width: 35%;
+}
+
+.actions-col {
+  width: 25%;
+  text-align: left;
+}
+
+.users-table th {
+  font-weight: 600;
+  color: #1a237e;
+  background: #f8f9fa;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.users-table td {
+  color: #5c6bc0;
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+
+/* İşlem Butonları */
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.action-button i {
+  font-size: 22px;
+}
+
+.action-button.view {
+  color: white;
+  background-color: #1976d2;
+}
+
+.action-button.edit {
+  color: white;
+  background-color: #43a047;
+}
+
+.action-button.delete {
+  color: white;
+  background-color: #e53935;
+}
+
+.action-button.view:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(25, 118, 210, 0.5);
+}
+
+.action-button.edit:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(67, 160, 71, 0.5);
+}
+
+.action-button.delete:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(229, 57, 53, 0.5);
+}
+
+/* Modal Stili */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 550px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+  transform: translateY(0);
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #1a237e;
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #5c6bc0;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.close-button:hover {
+  background: #f0f2f5;
+  color: #1e88e5;
+  transform: rotate(90deg);
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-group label {
+  display: block;
+  color: #1a237e;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.3px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 1.1rem;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #1e88e5;
+  box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.15);
+  background-color: white;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.2rem;
+  margin-top: 2.5rem;
+}
+
+.cancel-button,
+.submit-button {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.cancel-button {
+  background: #f0f2f5;
+  color: #5c6bc0;
+}
+
+.submit-button {
+  background: linear-gradient(135deg, #1e88e5 0%, #1976d2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+.cancel-button:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(25, 118, 210, 0.4);
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 1rem;
+  margin-top: 0.7rem;
+  padding: 1rem;
+  background-color: #ffebee;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+.success-message {
+  color: #43a047;
+  font-size: 1rem;
+  margin-top: 0.7rem;
+  padding: 1rem;
+  background-color: #e8f5e9;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #5c6bc0;
+  font-weight: 600;
+  font-size: 1.2rem;
+}

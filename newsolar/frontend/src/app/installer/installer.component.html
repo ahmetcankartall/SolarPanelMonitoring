@@ -1,0 +1,145 @@
+<div class="installer-container">
+  <!-- Header -->
+  <div class="installer-header">
+    <div class="header-left">
+      <i class="material-icons">build</i>
+      <h1>Installer Paneli</h1>
+    </div>
+    <div class="header-right">
+      <div class="installer-info">
+        <i class="material-icons">person</i>
+        <span>{{ currentUser?.username }}</span>
+      </div>
+      <button class="logout-button" (click)="logout()">
+        <i class="material-icons">logout</i>
+        Çıkış Yap
+      </button>
+    </div>
+  </div>
+
+  <div class="installer-content">
+    <!-- Ana İçerik -->
+    <div class="installer-main">
+      <!-- Kullanıcılar -->
+      <div class="users-header">
+        <h2>Kullanıcı Yönetimi</h2>
+        <button class="add-user-button" (click)="openAddUserModal()">
+          <i class="material-icons">add</i>
+          Yeni Kullanıcı
+        </button>
+      </div>
+
+      <!-- Başarı Mesajı -->
+      <div class="success-message" *ngIf="successMessage">{{ successMessage }}</div>
+
+      <!-- Hata Mesajı -->
+      <div class="error-message" *ngIf="error && error !== 'Admin yetkisi gerekli'">{{ error }}</div>
+
+      <!-- Yükleniyor -->
+      <div class="loading" *ngIf="isLoading">Yükleniyor...</div>
+
+      <!-- Kullanıcı Tablosu -->
+      <table class="users-table" *ngIf="!isLoading">
+        <thead>
+          <tr>
+            <th class="username-col">Kullanıcı Adı</th>
+            <th class="date-col">Kayıt Tarihi</th>
+            <th class="actions-col">İşlemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers">
+            <td class="username-col">{{ user.username }}</td>
+            <td class="date-col">{{ user.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
+            <td class="actions">
+              <button class="action-button view" (click)="viewUserHome(user)">
+                <i class="material-icons">visibility</i>
+              </button>
+              <button class="action-button edit" (click)="editUser(user)">
+                <i class="material-icons">edit</i>
+              </button>
+              <button class="action-button delete" (click)="deleteUser(user)">
+                <i class="material-icons">delete</i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Kullanıcı Ekleme Modal -->
+  <div class="modal" *ngIf="showAddUserModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Yeni Kullanıcı Ekle</h2>
+        <button class="close-button" (click)="closeAddUserModal()">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <form [formGroup]="addUserForm" (ngSubmit)="submitAddUserForm()">
+        <div class="form-group">
+          <label for="username">Kullanıcı Adı</label>
+          <input type="text" id="username" formControlName="username">
+          <div class="error-message" *ngIf="isFieldInvalid('username')">
+            Kullanıcı adı gereklidir
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Şifre</label>
+          <input type="password" id="password" formControlName="password">
+          <div class="error-message" *ngIf="addUserForm.get('password')?.errors?.['required'] && addUserForm.get('password')?.touched">
+            Şifre gereklidir
+          </div>
+          <div class="error-message" *ngIf="addUserForm.get('password')?.errors?.['minlength'] && addUserForm.get('password')?.touched">
+            Şifre en az 6 karakter olmalıdır
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="cancel-button" (click)="closeAddUserModal()">İptal</button>
+          <button type="submit" class="submit-button" [disabled]="addUserForm.invalid || isLoading">
+            {{ isLoading ? 'Ekleniyor...' : 'Ekle' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Kullanıcı Düzenleme Modal -->
+  <div class="modal" *ngIf="showEditUserModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Kullanıcı Düzenle</h2>
+        <button class="close-button" (click)="closeEditUserModal()">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <form [formGroup]="editUserForm" (ngSubmit)="submitEditUserForm()">
+        <div class="form-group">
+          <label for="edit-username">Kullanıcı Adı</label>
+          <input type="text" id="edit-username" formControlName="username">
+          <div class="error-message" *ngIf="editUserForm.get('username')?.errors?.['required'] && editUserForm.get('username')?.touched">
+            Kullanıcı adı gereklidir
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-password">Şifre (Boş bırakılırsa değiştirilmez)</label>
+          <input type="password" id="edit-password" formControlName="password">
+          <div class="error-message" *ngIf="editUserForm.get('password')?.errors?.['minlength'] && editUserForm.get('password')?.touched">
+            Şifre en az 6 karakter olmalıdır
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="cancel-button" (click)="closeEditUserModal()">İptal</button>
+          <button type="submit" class="submit-button" [disabled]="editUserForm.invalid || isLoading">
+            {{ isLoading ? 'Güncelleniyor...' : 'Güncelle' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

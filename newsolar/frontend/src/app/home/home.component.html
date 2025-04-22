@@ -1,0 +1,179 @@
+<div class="dashboard">
+  <!-- Header -->
+  <nav class="top-navbar">
+    <div class="navbar-brand">
+      <i class="material-icons">solar_power</i>
+      <span>Solar Panel İzleme Sistemi</span>
+    </div>
+    <div class="navbar-actions">
+      <div class="time-badge">
+        <i class="material-icons">schedule</i>
+        {{ getCurrentData()?.created_at | date:'dd.MM.yyyy HH:mm:ss' }}
+      </div>
+      <button class="admin-return-button" *ngIf="isAdminView" (click)="returnToAdmin()">
+        <i class="material-icons">admin_panel_settings</i>
+        Admin Paneline Dön
+      </button>
+      <button class="installer-return-button" *ngIf="isInstallerView" (click)="returnToInstaller()">
+        <i class="material-icons">build</i>
+        Installer Paneline Dön
+      </button>
+      <button class="logout-button" (click)="logout()">
+        <i class="material-icons">logout</i>
+        Çıkış Yap
+      </button>
+    </div>
+  </nav>
+
+  <!-- Tab Butonları -->
+  <div class="tab-buttons">
+    <button class="tab-button" [class.active]="activeTab === 'flow'" (click)="setActiveTab('flow')">
+      <i class="material-icons">show_chart</i>
+      Enerji Akışı
+    </button>
+    <button class="tab-button" [class.active]="activeTab === 'details'" (click)="setActiveTab('details')">
+      <i class="material-icons">list_alt</i>
+      Detaylı Veriler
+    </button>
+    <button class="tab-button" [class.active]="activeTab === 'charts'" (click)="setActiveTab('charts')">
+      <i class="material-icons">bar_chart</i>
+      Grafikler
+    </button>
+  </div>
+
+  <div class="main-content">
+    <!-- Enerji Akış Kartı -->
+    <div class="row" *ngIf="activeTab === 'flow'">
+      <div class="col-12">
+        <div class="flow-card">
+          <div class="flow-header">
+            <h5>Enerji Akışı</h5>
+            <div class="flow-status">Aktif</div>
+          </div>
+          <div class="flow-diagram">
+            <div class="flow-item">
+              <i class="material-icons">solar_power</i>
+              <div class="flow-data">
+                <div class="flow-value">{{ getCurrentData()?.anlikGucUretimi | number:'1.2-2' }} W</div>
+                <div class="flow-label">Güç Üretimi</div>
+              </div>
+            </div>
+            <div class="flow-item">
+              <i class="material-icons">battery_charging_full</i>
+              <div class="flow-data">
+                <div class="battery-progress" [ngClass]="getBatteryClass()">
+                  <svg viewBox="0 0 36 36">
+                    <circle class="background" cx="18" cy="18" r="14" />
+                    <circle class="progress" cx="18" cy="18" r="14"
+                      [style.strokeDasharray]="87.96"
+                      [style.strokeDashoffset]="getStrokeDashoffset()" />
+                  </svg>
+                  <div class="percentage">{{ getCurrentData()?.akuSarjDurumu | number:'1.2-2' }}%</div>
+                </div>
+                <div class="flow-label">Akü Durumu</div>
+              </div>
+            </div>
+            <div class="flow-item">
+              <i class="material-icons">power</i>
+              <div class="flow-data">
+                <div class="flow-value">{{ getCurrentData()?.anlikEnerjiTuketimi | number:'1.2-2' }} W</div>
+                <div class="flow-label">Enerji Tüketimi</div>
+              </div>
+            </div>
+            <div class="flow-item">
+              <i class="material-icons">electric_meter</i>
+              <div class="flow-data">
+                <div class="flow-value">{{ getCurrentData()?.sebekeyeVerilenEnerji | number:'1.2-2' }} W</div>
+                <div class="flow-label">Şebeke Net Enerji</div>
+              </div>
+            </div>
+          </div>
+          <div class="flow-footer">
+            <div class="temp-indicator">
+              <i class="material-icons">device_thermostat</i>
+              <span>Panel: {{ getCurrentData()?.panelSicakligi | number:'1.2-2' }}°C</span>
+              <span class="ms-3">Verim: {{ getCurrentData()?.panelVerimi | number:'1.2-2' }}%</span>
+              <span class="ms-3">
+                <i class="material-icons">wb_sunny</i>
+                Işınım: {{ getCurrentData()?.gunesIsinimi | number:'1.2-2' }} W/m²
+              </span>
+              <span class="ms-3">
+                <i class="material-icons">battery_5_bar</i>
+                Akü G/Ç: {{ getCurrentData()?.akuGucDegisimi | number:'1.2-2' }} W
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detaylı Veriler Tablosu -->
+    <div class="row" *ngIf="activeTab === 'details'">
+      <div class="col-12">
+        <div class="data-card">
+          <div class="data-header">
+            <div class="data-title">
+              <i class="material-icons">history</i>
+              <h5>Detaylı Veriler</h5>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th><i class="material-icons">event</i>Zaman</th>
+                  <th><i class="material-icons">solar_power</i>Güç Üretimi</th>
+                  <th><i class="material-icons">device_thermostat</i>Panel Sıcaklığı</th>
+                  <th><i class="material-icons">speed</i>Panel Verimliliği</th>
+                  <th><i class="material-icons">wb_sunny</i>Güneş Işınımı</th>
+                  <th><i class="material-icons">battery_charging_full</i>Akü Durumu</th>
+                  <th><i class="material-icons">battery_5_bar</i>Akü Giriş/Çıkış</th>
+                  <th><i class="material-icons">power</i>Enerji Tüketimi</th>
+                  <th><i class="material-icons">electric_meter</i>Şebeke Net Enerji</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of solarData">
+                  <td>{{ item.created_at | date:'dd.MM.yyyy HH:mm:ss' }}</td>
+                  <td>{{ item.anlikGucUretimi | number:'1.2-2' }} W</td>
+                  <td>{{ item.panelSicakligi | number:'1.2-2' }} °C</td>
+                  <td>{{ item.panelVerimi | number:'1.2-2' }} %</td>
+                  <td>{{ item.gunesIsinimi | number:'1.2-2' }} W/m²</td>
+                  <td>{{ item.akuSarjDurumu | number:'1.2-2' }} %</td>
+                  <td>{{ item.akuGucDegisimi | number:'1.2-2' }} W</td>
+                  <td>{{ item.anlikEnerjiTuketimi | number:'1.2-2' }} W</td>
+                  <td>{{ item.sebekeyeVerilenEnerji | number:'1.2-2' }} W</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grafikler -->
+    <div class="row" *ngIf="activeTab === 'charts'">
+      <div class="col-6">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h5>Güç Üretimi Grafiği</h5>
+          </div>
+          <div class="chart-container">
+            <canvas #powerProductionChart></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h5>Güç Tüketimi Grafiği</h5>
+          </div>
+          <div class="chart-container">
+            <canvas #powerConsumptionChart></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

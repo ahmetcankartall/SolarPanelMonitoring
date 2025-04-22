@@ -1,0 +1,188 @@
+<div class="admin-container">
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="header-left">
+      <i class="material-icons">admin_panel_settings</i>
+      <h1>Admin Paneli</h1>
+    </div>
+    <div class="header-right">
+      <div class="admin-info">
+        <i class="material-icons">person</i>
+        <span>{{ currentUser?.username }}</span>
+      </div>
+      <button class="logout-button" (click)="logout()">
+        <i class="material-icons">logout</i>
+        Çıkış Yap
+      </button>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    <!-- Sol Menü -->
+    <div class="admin-sidebar">
+      <button
+        class="menu-item"
+        [class.active]="activeMenu === 'users'"
+        (click)="setActiveMenu('users')">
+        <i class="material-icons">person</i>
+        Kullanıcılar
+      </button>
+      <button
+        class="menu-item"
+        [class.active]="activeMenu === 'admins'"
+        (click)="setActiveMenu('admins')">
+        <i class="material-icons">admin_panel_settings</i>
+        Adminler
+      </button>
+      <button
+        class="menu-item"
+        [class.active]="activeMenu === 'installers'"
+        (click)="setActiveMenu('installers')">
+        <i class="material-icons">build</i>
+        Installer'lar
+      </button>
+    </div>
+
+    <!-- Ana İçerik -->
+    <div class="admin-main">
+      <!-- Kullanıcılar -->
+      <div class="users-header">
+        <h2>{{ getActiveMenuTitle() }}</h2>
+        <button class="add-user-button" (click)="openAddUserModal()">
+          <i class="material-icons">add</i>
+          Yeni Kullanıcı
+        </button>
+      </div>
+
+      <!-- Hata Mesajı -->
+      <div class="error-message" *ngIf="error">{{ error }}</div>
+
+      <!-- Yükleniyor -->
+      <div class="loading" *ngIf="isLoading">Yükleniyor...</div>
+
+      <!-- Kullanıcı Tablosu -->
+      <table class="users-table" *ngIf="!isLoading">
+        <thead>
+          <tr>
+            <th>Kullanıcı Adı</th>
+            <th>Rol</th>
+            <th>Kayıt Tarihi</th>
+            <th>İşlemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers">
+            <td>{{ user.username }}</td>
+            <td>{{ getLocalizedRole(user.role) }}</td>
+            <td>{{ user.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
+            <td class="actions">
+              <button class="action-button view" (click)="viewUserHome(user)"
+                *ngIf="user.role !== 'admin' && user.role !== 'installer'">
+                <i class="material-icons">visibility</i>
+              </button>
+              <button class="action-button edit" (click)="editUser(user)">
+                <i class="material-icons">edit</i>
+              </button>
+              <button class="action-button delete" (click)="deleteUser(user)">
+                <i class="material-icons">delete</i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Kullanıcı Ekleme Modal -->
+  <div class="modal" *ngIf="showAddUserModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Yeni Kullanıcı Ekle</h2>
+        <button class="close-button" (click)="closeAddUserModal()">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <form [formGroup]="addUserForm" (ngSubmit)="submitAddUserForm()">
+        <div class="form-group">
+          <label for="username">Kullanıcı Adı</label>
+          <input type="text" id="username" formControlName="username">
+          <div class="error-message" *ngIf="addUserForm.get('username')?.errors?.['required'] && addUserForm.get('username')?.touched">
+            Kullanıcı adı gereklidir
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Şifre</label>
+          <input type="password" id="password" formControlName="password">
+          <div class="error-message" *ngIf="addUserForm.get('password')?.errors?.['required'] && addUserForm.get('password')?.touched">
+            Şifre gereklidir
+          </div>
+          <div class="error-message" *ngIf="addUserForm.get('password')?.errors?.['minlength'] && addUserForm.get('password')?.touched">
+            Şifre en az 6 karakter olmalıdır
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="role">Rol</label>
+          <select id="role" formControlName="role">
+            <option value="user">Kullanıcı</option>
+            <option value="installer">Installer</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="cancel-button" (click)="closeAddUserModal()">İptal</button>
+          <button type="submit" class="submit-button" [disabled]="addUserForm.invalid || isLoading">
+            {{ isLoading ? 'Ekleniyor...' : 'Ekle' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Kullanıcı Düzenleme Modal -->
+  <div class="modal" *ngIf="showEditUserModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Kullanıcı Düzenle</h2>
+        <button class="close-button" (click)="closeEditUserModal()">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <form [formGroup]="editUserForm" (ngSubmit)="submitEditUserForm()">
+        <div class="form-group">
+          <label for="edit-username">Kullanıcı Adı</label>
+          <input type="text" id="edit-username" formControlName="username">
+          <div class="error-message" *ngIf="editUserForm.get('username')?.errors?.['required'] && editUserForm.get('username')?.touched">
+            Kullanıcı adı gereklidir
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-password">Şifre (Boş bırakılırsa değiştirilmez)</label>
+          <input type="password" id="edit-password" formControlName="password">
+          <div class="error-message" *ngIf="editUserForm.get('password')?.errors?.['minlength'] && editUserForm.get('password')?.touched">
+            Şifre en az 6 karakter olmalıdır
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-role">Rol</label>
+          <select id="edit-role" formControlName="role">
+            <option value="user">Kullanıcı</option>
+            <option value="installer">Installer</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="cancel-button" (click)="closeEditUserModal()">İptal</button>
+          <button type="submit" class="submit-button" [disabled]="editUserForm.invalid || isLoading">
+            {{ isLoading ? 'Güncelleniyor...' : 'Güncelle' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

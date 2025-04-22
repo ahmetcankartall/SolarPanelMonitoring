@@ -1,0 +1,87 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <i class="material-icons">solar_power</i>
+      <h1>Solar Panel İzleme Sistemi</h1>
+    </div>
+
+    <div class="login-type-buttons">
+      <button
+        class="login-type-button"
+        [class.active]="loginType === 'admin'"
+        (click)="setLoginType('admin')">
+        <i class="material-icons">admin_panel_settings</i>
+        Admin Girişi
+      </button>
+      <button
+        class="login-type-button"
+        [class.active]="loginType === 'user'"
+        (click)="setLoginType('user')">
+        <i class="material-icons">person</i>
+        Kullanıcı Girişi
+      </button>
+      <button
+        class="login-type-button"
+        [class.active]="loginType === 'installer'"
+        (click)="setLoginType('installer')">
+        <i class="material-icons">build</i>
+        Installer Girişi
+      </button>
+    </div>
+
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">
+          <i class="material-icons">person</i>
+          Kullanıcı Adı
+        </label>
+        <input
+          type="text"
+          id="username"
+          formControlName="username"
+          placeholder="Kullanıcı adınızı giriniz"
+          [class.is-invalid]="isFieldInvalid('username')">
+        <div class="error-message" *ngIf="isFieldInvalid('username')">
+          Kullanıcı adı gereklidir
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">
+          <i class="material-icons">lock</i>
+          Şifre
+        </label>
+        <div class="password-input">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            placeholder="Şifrenizi giriniz"
+            [class.is-invalid]="isFieldInvalid('password')">
+          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+            <i class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</i>
+          </button>
+        </div>
+        <div class="error-message" *ngIf="isFieldInvalid('password')">
+          Şifre gereklidir
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="remember-me">
+          <input type="checkbox" formControlName="rememberMe">
+          <span>Beni Hatırla</span>
+        </label>
+      </div>
+
+      <button type="submit" class="login-button" [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Giriş Yap</span>
+        <div class="spinner" *ngIf="isLoading"></div>
+      </button>
+
+      <div class="error-message login-error" *ngIf="loginError">
+        {{ loginError }}
+      </div>
+    </form>
+  </div>
+</div>
